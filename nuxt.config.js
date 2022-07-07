@@ -4,7 +4,7 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'Welcome to the Cat App',
+    title: 'Cat Show 🐱',
     htmlAttrs: {
       lang: 'en',
     },
@@ -48,4 +48,6 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
+
+  css: ['~/assets/css/transitions.css'],
 }

@@ -7,24 +7,45 @@
         width="54"
         height="54"
       />
-      <span class="font-semibold text-xl tracking-tight">Cats App</span>
+      <span class="font-semibold text-xl tracking-tight select-none">
+        <NuxtLink to="/"> Cat Show </NuxtLink>
+      </span>
     </div>
     <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto mt-2">
       <div class="text-sm lg:flex-grow">
+          <NuxtLink to="/explore" class="
+            block
+            mt-4
+            lg:inline-block lg:mt-0
+            text-red-100
+            hover:text-white
+            mr-4
+            cursor-pointer
+          "> 🐾 Explore </NuxtLink>
         <a
-          class="block mt-4 lg:inline-block lg:mt-0 text-red-100 hover:text-white mr-4 cursor-pointer"
+          class="
+            block
+            mt-4
+            lg:inline-block lg:mt-0
+            text-red-100
+            hover:text-white
+            mr-4
+            cursor-pointer
+          "
         >
-          Docs
+          🐈 Breeds
         </a>
         <a
-          class="block mt-4 lg:inline-block lg:mt-0 text-red-100 hover:text-white mr-4 cursor-pointer"
+          class="
+            block
+            mt-4
+            lg:inline-block lg:mt-0
+            text-red-100
+            hover:text-white
+            cursor-pointer
+          "
         >
-          Examples
-        </a>
-        <a
-          class="block mt-4 lg:inline-block lg:mt-0 text-red-100 hover:text-white cursor-pointer"
-        >
-          Blog
+          😻 Favourites
         </a>
       </div>
     </div>
