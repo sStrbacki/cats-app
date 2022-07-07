@@ -4,7 +4,7 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'cats-app',
+    title: 'Welcome to the Cat App',
     htmlAttrs: {
       lang: 'en',
     },
