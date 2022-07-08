@@ -41,14 +41,55 @@
           </option>
         </select>
       </div>
+      <div>
+        <button
+          class="rounded relative inline-flex group items-center justify-center px-3.5 py-1.5 ml-8 mt-11 cursor-pointer border-b-4 border-l-2 shadow-lg bg-gradient-to-tr from-red-400 to-red-300 border-red-500 text-white"
+          @click="reloadImages"
+        >
+          Reload
+        </button>
+      </div>
     </div>
-    <div class="flex flex-row flex-wrap mt-5 ml-4 w-2/3">
+    <div
+      class="flex w-1/5 mt-10 align-center justify-center"
+      v-if="!imagesLoaded"
+    >
+      <Spinner />
+    </div>
+    <div
+      class="flex flex-row flex-wrap mt-5 ml-4 w-2/3"
+      v-if="imagesLoaded && images.length"
+    >
       <img
         :src="image.url"
         v-for="image in images"
         :key="image.id"
         class="w-64 h-64 shadow-md bg-auto rounded hover:rounded-md mr-4 mb-4"
       />
+    </div>
+    <div v-if="imagesLoaded && images.length === 0">
+      <div
+        class="flex w-1/5 mt-5 align-center justify-center ml-4 bg-red-100 border-t-4 border-red-500 rounded-b text-red-900 px-4 py-3 shadow-md"
+        role="alert"
+      >
+        <div class="flex">
+          <div class="py-1">
+            <svg
+              class="fill-current h-6 w-6 text-red-500 mr-4"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+            >
+              <path
+                d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"
+              />
+            </svg>
+          </div>
+          <div>
+            <p class="font-bold">No images found 😿</p>
+            <p class="text-sm">No results were found matching your selection</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -68,29 +109,39 @@ export default Vue.extend({
     title: 'Explore',
   }),
   methods: {
-    searchImages() {
-      if (!this.selectedCategoryId && !this.selectedBreedId) return;
-      this.$store.dispatch(StoreActions.searchImages, {
+    async searchImages() {
+      if (!this.selectedCategoryId && !this.selectedBreedId)
+        await this.$store.dispatch(StoreActions.fetchImages);
+      await this.$store.dispatch(StoreActions.searchImages, {
         categoryId: this.selectedCategoryId,
         breedId: this.selectedBreedId,
       });
+    },
+    async reloadImages() {
+      if (!this.selectedCategoryId && !this.selectedBreedId)
+        await this.$store.dispatch(StoreActions.fetchImages);
+      else
+        await this.$store.dispatch(StoreActions.searchImages, {
+          categoryId: this.selectedCategoryId,
+          breedId: this.selectedBreedId,
+        });
     },
   },
   computed: {
     ...mapGetters({
       images: 'images',
+      imagesLoaded: 'imagesLoaded',
       categories: 'categories',
       breeds: 'breeds',
     }),
   },
-  beforeRouteLeave(to, from, next) {
-    //this.$store.dispatch(StoreActions.clearImages);
-    next();
-  },
   async fetch() {
-    if (!this.images.length) this.$store.dispatch(StoreActions.fetchImages);
-    if (!this.categories.length) this.$store.dispatch(StoreActions.fetchCategories);
-    if (!this.breeds.length) this.$store.dispatch(StoreActions.fetchBreeds);
+    if (!this.images.length)
+      await this.$store.dispatch(StoreActions.fetchImages);
+    if (!this.categories.length)
+      await this.$store.dispatch(StoreActions.fetchCategories);
+    if (!this.breeds.length)
+      await this.$store.dispatch(StoreActions.fetchBreeds);
   },
 });
 </script>
