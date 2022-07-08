@@ -97,34 +97,26 @@
 <script lang="ts">
 import Vue from 'vue';
 import { mapGetters } from 'vuex';
-import { StoreActions } from '~/store/index';
+import { StoreActions, StoreMutations } from '~/store/index';
 
 export default Vue.extend({
   name: 'Explore',
-  data: () => ({
-    selectedCategoryId: null as null | number,
-    selectedBreedId: null as null | string,
-  }),
   head: () => ({
     title: 'Explore',
   }),
   methods: {
     async searchImages() {
       if (!this.selectedCategoryId && !this.selectedBreedId)
-        await this.$store.dispatch(StoreActions.fetchImages);
-      await this.$store.dispatch(StoreActions.searchImages, {
+        await this.$store.dispatch(StoreActions.FetchImages);
+      await this.$store.dispatch(StoreActions.SearchImages, {
         categoryId: this.selectedCategoryId,
         breedId: this.selectedBreedId,
       });
     },
     async reloadImages() {
       if (!this.selectedCategoryId && !this.selectedBreedId)
-        await this.$store.dispatch(StoreActions.fetchImages);
-      else
-        await this.$store.dispatch(StoreActions.searchImages, {
-          categoryId: this.selectedCategoryId,
-          breedId: this.selectedBreedId,
-        });
+        await this.$store.dispatch(StoreActions.FetchImages);
+      else await this.$store.dispatch(StoreActions.SearchImages);
     },
   },
   computed: {
@@ -134,14 +126,30 @@ export default Vue.extend({
       categories: 'categories',
       breeds: 'breeds',
     }),
+    selectedCategoryId: {
+      get() {
+        return this.$store.getters.selectedCategoryId;
+      },
+      set(value) {
+        this.$store.commit(StoreMutations.SetSelectedCategory, value);
+      },
+    },
+    selectedBreedId: {
+      get() {
+        return this.$store.getters.selectedBreedId;
+      },
+      set(value) {
+        this.$store.commit(StoreMutations.SetSelectedBreed, value);
+      },
+    },
   },
   async fetch() {
     if (!this.images.length)
-      await this.$store.dispatch(StoreActions.fetchImages);
+      await this.$store.dispatch(StoreActions.FetchImages);
     if (!this.categories.length)
-      await this.$store.dispatch(StoreActions.fetchCategories);
+      await this.$store.dispatch(StoreActions.FetchCategories);
     if (!this.breeds.length)
-      await this.$store.dispatch(StoreActions.fetchBreeds);
+      await this.$store.dispatch(StoreActions.FetchBreeds);
   },
 });
 </script>
