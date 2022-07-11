@@ -6,6 +6,17 @@ declare module 'vuex/types/index' {
     $api: NuxtAxiosInstance;
   }
 }
+declare module '@nuxt/types' {
+  interface Vue {
+    $api: NuxtAxiosInstance;
+  }
+  interface NuxtAppOptions {
+    $api: NuxtAxiosInstance;
+  }
+  interface Context {
+    $api: NuxtAxiosInstance;
+  }
+}
 
 const axios: Plugin = ({ $axios }, inject) => {
   const api = $axios.create({

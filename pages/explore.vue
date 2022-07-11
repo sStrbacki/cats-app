@@ -97,7 +97,6 @@ import { mapGetters } from 'vuex';
 import { StoreActions, StoreMutations } from '~/store/index';
 import Category from '~/types/Category';
 import Favourite from '~/types/Favourite';
-import Image from '~/types/Image';
 
 export default Vue.extend({
   name: 'Explore',

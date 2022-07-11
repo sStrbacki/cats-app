@@ -17,6 +17,8 @@ export enum StoreMutations {
   SetFavourites = 'SET_FAVOURITES',
   AddFavourite = 'ADD_FAVOURITE',
   RemoveFavourite = 'REMOVE_FAVOURITE',
+  SetFavouriteImages = 'SET_FAVOURITE_IMAGES',
+  SetFavouritesNextPageAvailability = 'SET_FAVOURITES_NEXT_PAGE_AVAILABILITY',
 }
 
 export enum StoreActions {
@@ -29,6 +31,7 @@ export enum StoreActions {
   FetchFavourites = 'fetchFavourites',
   PostFavourite = 'postFavourite',
   DeleteFavourite = 'deleteFavourite',
+  FetchFavouriteImages = 'fetchFavouriteImages',
 }
 
 export const state = () => ({
@@ -39,6 +42,8 @@ export const state = () => ({
   selectedBreedId: null as null | string,
   breeds: [] as Array<Breed>,
   favourites: [] as Array<Favourite>,
+  favouriteImages: [] as Array<Image>,
+  isNextPageOfFavouritesAvailabe: false,
 });
 
 export type RootState = ReturnType<typeof state>;
@@ -51,6 +56,9 @@ export const getters: GetterTree<RootState, RootState> = {
   breeds: (state: RootState) => state.breeds,
   selectedBreedId: (state: RootState) => state.selectedBreedId,
   favourites: (state: RootState) => state.favourites,
+  favouriteImages: (state: RootState) => state.favouriteImages,
+  isNextPageOfFavouritesAvailabe: (state: RootState) =>
+    state.isNextPageOfFavouritesAvailabe,
 };
 
 export const mutations: MutationTree<RootState> = {
@@ -83,6 +91,14 @@ export const mutations: MutationTree<RootState> = {
     (state.favourites = state.favourites.filter(
       (favourite: Favourite): boolean => favourite.image_id !== imageId
     )),
+  [StoreMutations.SetFavouriteImages]: (
+    state: RootState,
+    favouriteImages: Array<Image>
+  ) => (state.favouriteImages = favouriteImages),
+  [StoreMutations.SetFavouritesNextPageAvailability]: (
+    state: RootState,
+    value: boolean
+  ) => (state.isNextPageOfFavouritesAvailabe = value),
 };
 
 export const actions: ActionTree<RootState, RootState> = {
@@ -128,11 +144,17 @@ export const actions: ActionTree<RootState, RootState> = {
     )) as Array<Breed>;
     commit(StoreMutations.SetBreeds, breeds);
   },
-  async fetchFavourites({ commit }) {
+  async fetchFavourites({ commit }, page) {
     const favourites: Array<Favourite> = (await this.$api.$get(
-      '/v1/favourites'
+      `/v1/favourites?limit=8&page=${page}`
+    )) as Array<Favourite>;
+    const nextPageFavourites: Array<Favourite> = (await this.$api.$get(
+      `/v1/favourites?limit=8&page=${page + 1}`
     )) as Array<Favourite>;
     commit(StoreMutations.SetFavourites, favourites);
+    if (nextPageFavourites.length)
+      commit(StoreMutations.SetFavouritesNextPageAvailability, true);
+    else commit(StoreMutations.SetFavouritesNextPageAvailability, false);
   },
   async postFavourite({ commit }, imageId: string) {
     let favouriteResponse: AxiosResponse<FavouriteResponse> =
@@ -154,5 +176,15 @@ export const actions: ActionTree<RootState, RootState> = {
     );
     await this.$api.delete(`v1/favourites/${foundFavourite.id}`);
     commit(StoreMutations.RemoveFavourite, imageId);
+  },
+  async fetchFavouriteImages({ commit, getters }) {
+    const imageApiCalls: Array<Promise<Image>> = [];
+
+    getters.favourites.forEach((favourite: Favourite) => {
+      imageApiCalls.push(this.$api.$get(`v1/images/${favourite.image_id}`));
+    });
+
+    const favouriteImages: Array<Image> = await Promise.all(imageApiCalls);
+    commit(StoreMutations.SetFavouriteImages, favouriteImages);
   },
 };

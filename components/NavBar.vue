@@ -25,11 +25,12 @@
         >
           🐈 Breeds
         </NuxtLink>
-        <a
+        <NuxtLink
+          to="/favourites"
           class="block mt-4 lg:inline-block lg:mt-0 text-red-100 hover:text-white cursor-pointer"
         >
           😻 Favourites
-        </a>
+        </NuxtLink>
       </div>
     </div>
   </nav>
