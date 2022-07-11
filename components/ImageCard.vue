@@ -12,7 +12,7 @@
         <button
           type="button"
           class="w-10 h-10 rounded-full text-red-600 hover:text-red-700 grow"
-          :class="{ wobble: disabled }"
+          :class="{ puffOut: disabled }"
           @click="favourite"
         >
           <svg style="mr-2 -ml-1 bg-red-100" viewBox="0 0 24 24">
@@ -86,9 +86,8 @@ export default Vue.extend({
 .grow:hover {
   transform: scale(1.3);
 }
-.wobble {
-  -webkit-animation: wobble 0.8s both;
-  animation: wobble 0.8s both;
+.puffOut {
+  animation: puffOut 2s cubic-bezier(0.165, 0.84, 0.44, 1) both;
 }
 
 .fade-enter-active,
@@ -101,62 +100,16 @@ export default Vue.extend({
   opacity: 0;
 }
 
-@-webkit-keyframes wobble {
-  0%,
+@keyframes puffOut {
+  0% {
+    transform: scale(1);
+    filter: blur(0);
+    opacity: 1;
+  }
   100% {
-    -webkit-transform: translateY(0) rotate(0);
-    transform: translateY(0) rotate(0);
-    -webkit-transform-origin: 50% 50%;
-    transform-origin: 50% 50%;
-  }
-  15% {
-    -webkit-transform: translateY(-15px) rotate(-3deg);
-    transform: translateY(-15px) rotate(-3deg);
-  }
-  30% {
-    -webkit-transform: translateY(7px) rotate(3deg);
-    transform: translateY(7px) rotate(3deg);
-  }
-  45% {
-    -webkit-transform: translateY(-7px) rotate(-1.8deg);
-    transform: translateY(-7px) rotate(-1.8deg);
-  }
-  60% {
-    -webkit-transform: translateY(4.5px) rotate(1.2deg);
-    transform: translateY(4.5px) rotate(1.2deg);
-  }
-  75% {
-    -webkit-transform: translateY(-3px) rotate(-0.6deg);
-    transform: translateY(-3px) rotate(-0.6deg);
-  }
-}
-@keyframes wobble {
-  0%,
-  100% {
-    -webkit-transform: translateY(0) rotate(0);
-    transform: translateY(0) rotate(0);
-    -webkit-transform-origin: 50% 50%;
-    transform-origin: 50% 50%;
-  }
-  15% {
-    -webkit-transform: translateY(-15px) rotate(-3deg);
-    transform: translateY(-15px) rotate(-3deg);
-  }
-  30% {
-    -webkit-transform: translateY(7px) rotate(3deg);
-    transform: translateY(7px) rotate(3deg);
-  }
-  45% {
-    -webkit-transform: translateY(-7px) rotate(-1.8deg);
-    transform: translateY(-7px) rotate(-1.8deg);
-  }
-  60% {
-    -webkit-transform: translateY(4.5px) rotate(1.2deg);
-    transform: translateY(4.5px) rotate(1.2deg);
-  }
-  75% {
-    -webkit-transform: translateY(-3px) rotate(-0.6deg);
-    transform: translateY(-3px) rotate(-0.6deg);
+    transform: scale(2);
+    filter: blur(4px);
+    opacity: 0;
   }
 }
 </style>

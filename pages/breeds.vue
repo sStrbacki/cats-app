@@ -138,7 +138,7 @@ export default Vue.extend({
     }),
     selectedBreed(): Breed {
       return this.breeds.find(
-        (breed: Breed) => breed.id === this.selectedBreedId
+        (breed: Breed): boolean => breed.id === this.selectedBreedId
       );
     },
   },
