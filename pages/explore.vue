@@ -60,12 +60,9 @@
       class="flex flex-row flex-wrap mt-5 ml-4 w-2/3"
       v-if="imagesLoaded && images.length"
     >
-      <img
-        :src="image.url"
-        v-for="image in images"
-        :key="image.id"
-        class="w-64 h-64 shadow-md bg-auto rounded hover:rounded-md mr-4 mb-4"
-      />
+      <div class="flex relative" v-for="image in images" :key="image.id">
+        <ImageCard :image="image" :favDisabled="isImageFavourited(image.id)" />
+      </div>
     </div>
     <div v-if="imagesLoaded && images.length === 0">
       <div
@@ -98,14 +95,17 @@
 import Vue from 'vue';
 import { mapGetters } from 'vuex';
 import { StoreActions, StoreMutations } from '~/store/index';
+import Favourite from '~/types/Favourite';
+import Image from '~/types/Image';
 
 export default Vue.extend({
   name: 'Explore',
   head: () => ({
     title: 'Explore',
   }),
+
   methods: {
-    async searchImages() {
+    async searchImages(): Promise<void> {
       if (!this.selectedCategoryId && !this.selectedBreedId)
         await this.$store.dispatch(StoreActions.FetchImages);
       await this.$store.dispatch(StoreActions.SearchImages, {
@@ -113,7 +113,7 @@ export default Vue.extend({
         breedId: this.selectedBreedId,
       });
     },
-    async reloadImages() {
+    async reloadImages(): Promise<void> {
       if (!this.selectedCategoryId && !this.selectedBreedId)
         await this.$store.dispatch(StoreActions.FetchImages);
       else await this.$store.dispatch(StoreActions.SearchImages);
@@ -125,6 +125,7 @@ export default Vue.extend({
       imagesLoaded: 'imagesLoaded',
       categories: 'categories',
       breeds: 'breeds',
+      favourites: 'favourites',
     }),
     selectedCategoryId: {
       get() {
@@ -142,6 +143,13 @@ export default Vue.extend({
         this.$store.commit(StoreMutations.SetSelectedBreed, value);
       },
     },
+    isImageFavourited() {
+      return (imageId: number | string) => {
+        return this.favourites.some(
+          (favourite: Favourite) => favourite.image_id === imageId
+        );
+      };
+    },
   },
   async fetch() {
     if (!this.images.length)
@@ -150,6 +158,8 @@ export default Vue.extend({
       await this.$store.dispatch(StoreActions.FetchCategories);
     if (!this.breeds.length)
       await this.$store.dispatch(StoreActions.FetchBreeds);
+    if (!this.favourites.length)
+      await this.$store.dispatch(StoreActions.FetchFavourites);
   },
 });
 </script>
