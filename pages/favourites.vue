@@ -1,6 +1,12 @@
 <template>
   <div>
-    <div class="flex flex-row flex-wrap mt-5 ml-4 w-2/3">
+    <div>
+      <h1 class="ml-4 mt-5 text-xl font-medium">Your Favourites 😻</h1>
+    </div>
+    <div
+      class="flex flex-row flex-wrap mt-5 ml-4 w-2/3"
+      v-if="favouritesLoaded"
+    >
       <div
         class="flex relative"
         v-for="image in favouriteImages"
@@ -8,6 +14,9 @@
       >
         <FavouriteCard :image="image" />
       </div>
+    </div>
+    <div class="flex mt-5 ml-4 w-2/3" v-else>
+      <Spinner />
     </div>
     <div class="flex flex-row mt-5 ml-4">
       <button
@@ -58,7 +67,6 @@ export default Vue.extend({
         StoreActions.FetchFavourites,
         this.currentPage
       );
-      await this.$store.dispatch(StoreActions.FetchFavouriteImages);
     },
     async nextPage() {
       this.currentPage += 1;
@@ -72,13 +80,13 @@ export default Vue.extend({
   computed: {
     ...mapGetters({
       favouriteImages: 'favouriteImages',
-      isNextPageOfFavouritesAvailable: 'isNextPageOfFavouritesAvailabe',
+      favouritesLoaded: 'favouritesLoaded',
+      isNextPageOfFavouritesAvailable: 'isNextPageOfFavouritesAvailable',
     }),
   },
   async fetch(context) {
     if (!context.store.getters.favourites.length) {
       await context.store.dispatch(StoreActions.FetchFavourites, 0);
-      await context.store.dispatch(StoreActions.FetchFavouriteImages);
     }
   },
 });

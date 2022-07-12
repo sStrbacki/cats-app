@@ -42,6 +42,7 @@ export default Vue.extend({
   methods: {
     async unfavorite(): Promise<void> {
       await this.$store.dispatch(StoreActions.DeleteFavourite, this.image.id);
+      this.$emit('unfavorited');
     },
   },
 });

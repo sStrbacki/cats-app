@@ -65,7 +65,7 @@ export default Vue.extend({
   methods: {
     async favourite(): Promise<void> {
       this.shakeDisabled();
-      await this.$store.dispatch(StoreActions.PostFavourite, this.image.id);
+      await this.$store.dispatch(StoreActions.PostFavourite, this.image);
     },
     shakeDisabled(): void {
       this.disabled = true;
