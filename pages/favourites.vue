@@ -9,7 +9,7 @@
     >
       <div
         class="flex relative"
-        v-for="image in favouriteImages"
+        v-for="image in paginatedImages"
         :key="image.id"
       >
         <FavouriteCard :image="image" />
@@ -46,7 +46,7 @@
         Previous page
       </button>
       <button
-        v-if="isNextPageOfFavouritesAvailable"
+        v-if="isNextPageAvailable"
         class="
           rounded
           relative
@@ -77,11 +77,13 @@
 import Vue from 'vue';
 import { mapGetters } from 'vuex';
 import { StoreActions } from '~/store';
+import Image from '~/types/Image';
 
 export default Vue.extend({
   name: 'Favourites',
   data: () => ({
     currentPage: 0,
+    pageSize: 8,
   }),
   head: () => ({
     title: 'Favourites',
@@ -95,19 +97,27 @@ export default Vue.extend({
     },
     async nextPage() {
       this.currentPage += 1;
-      await this.fetchFavouriteImages();
     },
     async prevPage() {
       this.currentPage -= 1;
-      await this.fetchFavouriteImages();
     },
   },
   computed: {
     ...mapGetters({
       favouriteImages: 'favouriteImages',
       favouritesLoaded: 'favouritesLoaded',
-      isNextPageOfFavouritesAvailable: 'isNextPageOfFavouritesAvailable',
     }),
+    paginatedImages(): Array<Image> {
+      return this.favouriteImages.slice(
+        this.currentPage * this.pageSize,
+        (this.currentPage + 1) * this.pageSize
+      );
+    },
+    isNextPageAvailable(): boolean {
+      return this.favouriteImages.slice(
+        (this.currentPage + 1) * (this.pageSize - 1)
+      );
+    },
   },
   async fetch(context) {
     if (!context.store.getters.favourites.length) {

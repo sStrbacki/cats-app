@@ -166,7 +166,6 @@ export default Vue.extend({
   head: () => ({
     title: 'Explore',
   }),
-
   methods: {
     async searchImages(): Promise<void> {
       if (!this.selectedCategoryId && !this.selectedBreedId)

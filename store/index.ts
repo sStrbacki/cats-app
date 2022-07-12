@@ -6,6 +6,8 @@ import Favourite from '~/types/Favourite';
 import { FavouriteResponse } from '~/types/FavouriteResponse';
 import { AxiosResponse } from 'axios';
 
+const pageSize: number = 8;
+
 export enum StoreMutations {
   SetImages = 'SET_IMAGES',
   ClearImages = 'CLEAR_IMAGES',
@@ -18,7 +20,6 @@ export enum StoreMutations {
   SetFavourites = 'SET_FAVOURITES',
   AddFavourite = 'ADD_FAVOURITE',
   RemoveFavourite = 'REMOVE_FAVOURITE',
-  SetFavouritesCache = 'SET_FAVOURITES_CACHE',
 }
 
 export enum StoreActions {
@@ -42,8 +43,6 @@ export const state = () => ({
   breeds: [] as Array<Breed>,
   favourites: [] as Array<Favourite>,
   favouritesLoaded: true,
-  favouritesCache: [] as Array<Favourite>,
-  favouriteImages: [] as Array<Image>,
 });
 
 export type RootState = ReturnType<typeof state>;
@@ -58,12 +57,8 @@ export const getters: GetterTree<RootState, RootState> = {
   selectedBreedId: (state: RootState): string | null => state.selectedBreedId,
   favourites: (state: RootState): Array<Favourite> => state.favourites,
   favouritesLoaded: (state: RootState): boolean => state.favouritesLoaded,
-  favouritesCache: (state: RootState): Array<Favourite> =>
-    state.favouritesCache,
   favouriteImages: (state: RootState): Array<Image> =>
     state.favourites.map((favorite) => favorite.image),
-  isNextPageOfFavouritesAvailable: (state: RootState): boolean =>
-    state.favouritesCache.length !== 0,
 };
 
 export const mutations: MutationTree<RootState> = {
@@ -98,17 +93,13 @@ export const mutations: MutationTree<RootState> = {
     (state.favourites = state.favourites.filter(
       (favourite: Favourite): boolean => favourite.image_id !== imageId
     )),
-  [StoreMutations.SetFavouritesCache]: (
-    state: RootState,
-    value: Array<Favourite>
-  ) => (state.favouritesCache = value),
 };
 
 export const actions: ActionTree<RootState, RootState> = {
   async fetchImages({ commit }) {
     if (process.client) commit(StoreMutations.ToggleImagesLoaded);
     const images: Array<Image> = (await this.$api.$get(
-      '/v1/images/search?mime_types=jpg,png&limit=8'
+      `/v1/images/search?mime_types=jpg,png&limit=${pageSize}`
     )) as Array<Image>;
     if (process.client) commit(StoreMutations.ToggleImagesLoaded);
     commit(StoreMutations.SetImages, images);
@@ -124,7 +115,7 @@ export const actions: ActionTree<RootState, RootState> = {
         ? ''
         : `&category_ids=${context.getters.selectedCategoryId}`;
     const images: Array<Image> = (await this.$api.$get(
-      `/v1/images/search?mime_types=jpg,png&limit=8${breedQuery}${categoryQuery}`
+      `/v1/images/search?mime_types=jpg,png&limit=${pageSize}${breedQuery}${categoryQuery}`
     )) as Array<Image>;
     context.commit(StoreMutations.SetImages, images);
     context.commit(StoreMutations.ToggleImagesLoaded);
@@ -147,21 +138,15 @@ export const actions: ActionTree<RootState, RootState> = {
     )) as Array<Breed>;
     commit(StoreMutations.SetBreeds, breeds);
   },
-  async fetchFavourites({ commit }, page) {
+  async fetchFavourites({ commit, getters }, page) {
     if (process.client) commit(StoreMutations.ToggleFavouritesLoaded);
     const favourites: Array<Favourite> = (await this.$api.$get(
-      `/v1/favourites?limit=8&page=${page}`
-    )) as Array<Favourite>;
-    const nextPageFavourites: Array<Favourite> = (await this.$api.$get(
-      `/v1/favourites?limit=8&page=${page + 1}`
+      `/v1/favourites`
     )) as Array<Favourite>;
     commit(StoreMutations.SetFavourites, favourites);
     if (process.client) commit(StoreMutations.ToggleFavouritesLoaded);
-    if (nextPageFavourites.length)
-      commit(StoreMutations.SetFavouritesCache, nextPageFavourites);
-    else commit(StoreMutations.SetFavouritesCache, []);
   },
-  async postFavourite({ commit }, image: Image) {
+  async postFavourite({ commit, getters}, image: Image) {
     let favouriteResponse: AxiosResponse<FavouriteResponse> =
       await this.$api.post<FavouriteResponse>('v1/favourites', {
         image_id: image.id,
@@ -182,9 +167,5 @@ export const actions: ActionTree<RootState, RootState> = {
     );
     await this.$api.delete(`v1/favourites/${foundFavourite.id}`);
     commit(StoreMutations.RemoveFavourite, imageId);
-
-    if (getters.isNextPageOfFavouritesAvailable) {
-      commit(StoreMutations.AddFavourite, getters.favouritesCache[0]);
-    }
   },
 };
