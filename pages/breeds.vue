@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="flex flex-col">
+    <div class="flex flex-col" v-if="selectedBreed">
       <div class="w-1/3">
         <label
           for="categories"
@@ -9,7 +9,26 @@
         >
         <select
           id="categories"
-          class="bg-gray-50 ml-4 border shadow-md opacity-90 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          class="
+            bg-gray-50
+            ml-4
+            border
+            shadow-md
+            opacity-90
+            border-gray-300
+            text-gray-900 text-sm
+            rounded-lg
+            focus:ring-blue-500 focus:border-blue-500
+            block
+            w-full
+            p-2.5
+            dark:bg-gray-700
+            dark:border-gray-600
+            dark:placeholder-gray-400
+            dark:text-white
+            dark:focus:ring-blue-500
+            dark:focus:border-blue-500
+          "
           v-model="selectedBreedId"
         >
           <option selected :value="null">Choose a category</option>
@@ -20,7 +39,16 @@
       </div>
       <div>
         <div
-          class="w-1/3 bg-white rounded-lg border border-gray-200 mt-5 ml-4 shadow-md dark:bg-gray-800 dark:border-gray-700"
+          class="
+            w-1/3
+            bg-white
+            rounded-lg
+            border border-gray-200
+            mt-5
+            ml-4
+            shadow-md
+            dark:bg-gray-800 dark:border-gray-700
+          "
         >
           <img
             v-if="selectedBreed.image.url"
@@ -31,7 +59,14 @@
           <div class="p-5">
             <a href="#">
               <h5
-                class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
+                class="
+                  mb-2
+                  text-2xl
+                  font-bold
+                  tracking-tight
+                  text-gray-900
+                  dark:text-white
+                "
               >
                 {{ selectedBreed.name }}
               </h5>
@@ -53,7 +88,13 @@
                 <circle cx="12" cy="12" r="8" />
               </svg>
               <span
-                class="text-base font-normal leading-tight text-gray-500 dark:text-gray-400"
+                class="
+                  text-base
+                  font-normal
+                  leading-tight
+                  text-gray-500
+                  dark:text-gray-400
+                "
                 >Originating from {{ selectedBreed.origin }}</span
               >
             </li>
@@ -68,7 +109,13 @@
                 <circle cx="12" cy="12" r="8" />
               </svg>
               <span
-                class="text-base font-normal leading-tight text-gray-500 dark:text-gray-400"
+                class="
+                  text-base
+                  font-normal
+                  leading-tight
+                  text-gray-500
+                  dark:text-gray-400
+                "
                 >{{ selectedBreed.weight.metric }} kilograms</span
               >
             </li>
@@ -83,14 +130,32 @@
                 <circle cx="12" cy="12" r="8" />
               </svg>
               <span
-                class="text-base font-normal leading-tight text-gray-500 dark:text-gray-400"
+                class="
+                  text-base
+                  font-normal
+                  leading-tight
+                  text-gray-500
+                  dark:text-gray-400
+                "
                 >{{ selectedBreed.life_span }} years (average life span)</span
               >
             </li>
             <a
               :href="selectedBreed.wikipedia_url"
               target="blank"
-              class="inline-flex items-center py-2 px-3 mt-4 text-sm font-medium text-center text-white bg-red-400 rounded-lg hover:bg-red-500"
+              class="
+                inline-flex
+                items-center
+                py-2
+                px-3
+                mt-4
+                text-sm
+                font-medium
+                text-center text-white
+                bg-red-400
+                rounded-lg
+                hover:bg-red-500
+              "
             >
               Read more
               <svg
@@ -128,8 +193,11 @@ export default Vue.extend({
   },
   name: 'Breeds',
   async fetch() {
-    if (!this.breeds.length)
+    if (!this.breeds.length) {
+      console.log(this.breeds.length);
       await this.$store.dispatch(StoreActions.FetchBreeds);
+      console.log(this.$store.getters.breeds);
+    }
     this.selectedBreedId = this.breeds[0].id;
   },
   computed: {

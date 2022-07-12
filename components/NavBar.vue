@@ -15,19 +15,42 @@
       <div class="text-sm lg:flex-grow">
         <NuxtLink
           to="/explore"
-          class="block mt-4 lg:inline-block lg:mt-0 text-red-100 hover:text-white mr-4 cursor-pointer"
+          class="
+            block
+            mt-4
+            lg:inline-block lg:mt-0
+            text-red-100
+            hover:text-white
+            mr-4
+            cursor-pointer
+          "
         >
           🐾 Explore
         </NuxtLink>
         <NuxtLink
           to="/breeds"
-          class="block mt-4 lg:inline-block lg:mt-0 text-red-100 hover:text-white mr-4 cursor-pointer"
+          class="
+            block
+            mt-4
+            lg:inline-block lg:mt-0
+            text-red-100
+            hover:text-white
+            mr-4
+            cursor-pointer
+          "
         >
           🐈 Breeds
         </NuxtLink>
         <NuxtLink
           to="/favourites"
-          class="block mt-4 lg:inline-block lg:mt-0 text-red-100 hover:text-white cursor-pointer"
+          class="
+            block
+            mt-4
+            lg:inline-block lg:mt-0
+            text-red-100
+            hover:text-white
+            cursor-pointer
+          "
         >
           😻 Favourites
         </NuxtLink>

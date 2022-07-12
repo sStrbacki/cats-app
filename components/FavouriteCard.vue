@@ -6,13 +6,50 @@
     />
     <transition name="fade">
       <div
-        class="w-64 h-64 rounded absolute inset-0 z-10 flex justify-start items-end bg-transparent transition"
+        class="
+          w-64
+          h-64
+          rounded
+          absolute
+          inset-0
+          z-10
+          flex
+          justify-start
+          items-end
+          bg-transparent
+          transition
+        "
       >
         <div
-          class="bg-gray-300 flex w-full p-2 justify-center rounded-b-sm bg-opacity-50"
+          class="
+            bg-gray-300
+            flex
+            w-full
+            p-2
+            justify-center
+            rounded-b-sm
+            bg-opacity-50
+          "
         >
           <button
-            class="rounded relative inline-flex group items-center justify-center px-1.5 py-1.5 cursor-pointer border-b-4 border-l-2 shadow-lg bg-gradient-to-tr from-red-400 to-red-300 border-red-500 text-white"
+            class="
+              rounded
+              relative
+              inline-flex
+              group
+              items-center
+              justify-center
+              px-1.5
+              py-1.5
+              cursor-pointer
+              border-b-4 border-l-2
+              shadow-lg
+              bg-gradient-to-tr
+              from-red-400
+              to-red-300
+              border-red-500
+              text-white
+            "
             @click="unfavorite"
           >
             Unfavorite it
@@ -42,7 +79,6 @@ export default Vue.extend({
   methods: {
     async unfavorite(): Promise<void> {
       await this.$store.dispatch(StoreActions.DeleteFavourite, this.image.id);
-      this.$emit('unfavorited');
     },
   },
 });

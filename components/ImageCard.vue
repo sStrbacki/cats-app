@@ -7,7 +7,22 @@
     <transition name="fade">
       <div
         v-if="!favDisabled"
-        class="w-64 h-64 opacity-0 rounded hover:opacity-70 duration-300 absolute inset-0 z-10 flex justify-center items-center bg-gray-300 transition"
+        class="
+          w-64
+          h-64
+          opacity-0
+          rounded
+          hover:opacity-70
+          duration-300
+          absolute
+          inset-0
+          z-10
+          flex
+          justify-center
+          items-center
+          bg-gray-300
+          transition
+        "
       >
         <button
           type="button"
@@ -15,23 +30,55 @@
           :class="{ puffOut: disabled }"
           @click="favourite"
         >
-          <svg style="mr-2 -ml-1 bg-red-100" viewBox="0 0 24 24">
-            <path
-              fill="currentColor"
-              d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"
-            />
-          </svg>
+          <Heart />
         </button>
       </div>
       <div
         v-else
-        class="w-64 h-64 rounded absolute inset-0 z-10 flex justify-start items-end bg-transparent transition"
+        class="
+          w-64
+          h-64
+          rounded
+          absolute
+          inset-0
+          z-10
+          flex
+          justify-start
+          items-end
+          bg-transparent
+          transition
+        "
       >
         <div
-          class="bg-gray-300 flex w-full p-2 justify-center rounded-b-sm bg-opacity-50"
+          class="
+            bg-gray-300
+            flex
+            w-full
+            p-2
+            justify-center
+            rounded-b-sm
+            bg-opacity-50
+          "
         >
           <button
-            class="rounded relative inline-flex group items-center justify-center px-1.5 py-1.5 cursor-pointer border-b-4 border-l-2 shadow-lg bg-gradient-to-tr from-red-400 to-red-300 border-red-500 text-white"
+            class="
+              rounded
+              relative
+              inline-flex
+              group
+              items-center
+              justify-center
+              px-1.5
+              py-1.5
+              cursor-pointer
+              border-b-4 border-l-2
+              shadow-lg
+              bg-gradient-to-tr
+              from-red-400
+              to-red-300
+              border-red-500
+              text-white
+            "
             @click="unfavorite"
           >
             Unfavorite it
