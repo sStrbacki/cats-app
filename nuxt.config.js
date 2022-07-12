@@ -38,6 +38,7 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    '@nuxtjs/dotenv',
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -50,4 +51,4 @@ export default {
   build: {},
 
   css: ['~/assets/css/transitions.css'],
-}
+};

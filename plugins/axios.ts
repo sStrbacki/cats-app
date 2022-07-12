@@ -22,12 +22,12 @@ const axios: Plugin = ({ $axios }, inject) => {
   const api = $axios.create({
     headers: {
       common: {
-        'x-api-key': '90150617-3707-413b-a52d-1db651d4678a',
+        'x-api-key': process.env.X_API_KEY,
       },
     },
   }) as NuxtAxiosInstance;
 
-  api.setBaseURL('https://api.thecatapi.com');
+  api.setBaseURL(process.env.API_BASE_URL as string);
 
   inject('api', api);
 };
