@@ -42,3 +42,7 @@ Start the server
 ```bash
   yarn dev
 ```
+
+## Demo
+
+You can try the application on this [link](https://cats.strbacki.me/)
